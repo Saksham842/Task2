@@ -52,7 +52,13 @@ npm run dev
 
 ### Leads (`/api/leads`) *(All routes require Auth Header)*
 - `GET /` - Fetch paginated leads
-  - Query Params: `?search=xyz&status=New&source=Website&sort=latest&page=1&limit=10`
+  - **Query Params:**
+    - `search` (string)
+    - `status` (New, Contacted, Qualified, Lost)
+    - `source` (Website, Instagram, Referral)
+    - `sort` (latest, oldest)
+    - `page` (number)
+    - `limit` (number)
 - `POST /` - Create a new lead
   - Body: `{ "name": "Jane", "email": "jane@test.com", "status": "New", "source": "Website" }`
 - `PUT /:id` - Update an existing lead
