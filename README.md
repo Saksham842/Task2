@@ -1,57 +1,65 @@
-# Simple Leads Dashboard
+# Smart Leads Dashboard - Internship Assignment
 
-A simple web application to manage leads (potential customers). Built with React and Node.js.
+A modern, full-stack web application for managing potential customers (leads). Built with React, Node.js, and MySQL.
+
+**Deployment Link:** [Insert Your Vercel Link Here]
+**Backend API URL:** [Insert Your Render Link Here]
 
 ## Features
+- **Authentication & Authorization**: Secure JWT login with distinct `Admin` and `Sales User` roles.
+- **Lead Management**: Complete CRUD operations for leads.
+- **Advanced Filtering**: Debounced search, status filtering, and source filtering.
+- **Pagination**: Server-side pagination with limit/offset.
+- **Export**: Client-side CSV export functionality.
 
-1. **Login & Registration**: Users can sign up and log in.
-2. **Roles**: There are two types of users: Admin (can do everything) and Sales User (cannot delete leads).
-3. **Manage Leads**: You can add, view, edit, and delete leads.
-4. **Search & Filter**: Find leads by name or email, and filter by status or source.
-5. **Pagination**: Leads are shown in pages of 10.
-6. **Download**: You can download your leads as a CSV file.
+## Setup Instructions
 
-## How to Run with Docker (Easiest Way)
+### Prerequisites
+- Node.js installed
+- MySQL Server running
 
-If you have Docker installed, just run this command in the project folder:
-
+### 1. Database Setup
+Execute the provided SQL schema to create your tables and default users:
 ```bash
-docker compose up --build
+mysql -u root -p < server/database/schema.sql
+```
+*(Note: If using Aiven/cloud DB, just paste the contents of `schema.sql` into your query editor).*
+
+### 2. Backend Setup
+```bash
+cd server
+npm install
+cp .env.example .env  # (Fill in your actual DB credentials in .env)
+npm run dev
 ```
 
-Then open your browser to `http://localhost`.
+### 3. Frontend Setup
+```bash
+cd client
+npm install
+cp .env.example .env  # (Point VITE_API_URL to your backend, usually localhost:5000)
+npm run dev
+```
 
-## How to Run Manually
+## API Documentation
 
-If you want to run it without Docker, follow these steps:
+### Authentication (`/api/auth`)
+- `POST /register` - Register a new user
+  - Body: `{ "name": "John", "email": "john@test.com", "password": "pass", "role": "Admin" }`
+- `POST /login` - Login to an existing account
+  - Body: `{ "email": "john@test.com", "password": "pass" }`
+- `GET /profile` - Get current user profile (Requires Auth Header)
 
-### 1. Database
-1. Make sure MySQL is installed and running.
-2. Open your terminal and run this to create the database:
-   ```bash
-   mysql -u root -p < server/database/schema.sql
-   ```
+### Leads (`/api/leads`) *(All routes require Auth Header)*
+- `GET /` - Fetch paginated leads
+  - Query Params: `?search=xyz&status=New&source=Website&sort=latest&page=1&limit=10`
+- `POST /` - Create a new lead
+  - Body: `{ "name": "Jane", "email": "jane@test.com", "status": "New", "source": "Website" }`
+- `PUT /:id` - Update an existing lead
+- `DELETE /:id` - Delete a lead *(Admin Role Required)*
 
-### 2. Backend (Server)
-1. Open a terminal in the `server` folder.
-2. Install the packages and start the server:
-   ```bash
-   npm install
-   npm run dev
-   ```
-
-### 3. Frontend (Client)
-1. Open a new terminal in the `client` folder.
-2. Install the packages and start the React app:
-   ```bash
-   npm install
-   npm run dev
-   ```
-3. Open `http://localhost:5173` in your browser.
-
-## Test Users
-
-You can log in with these accounts to test the app (the password for both is `password123`):
-
-- **Admin User**: `admin@example.com`
-- **Sales User**: `sales@example.com`
+## Default Test Users
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@example.com` | `password123` |
+| Sales User | `sales@example.com` | `password123` |
