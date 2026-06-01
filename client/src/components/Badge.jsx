@@ -1,1 +1,19 @@
-export function Badge({ label, color = 'slate' }) {  const colors = {    yellow: 'bg-yellow-400/20 text-yellow-400',    blue: 'bg-blue-400/20 text-blue-400',    green: 'bg-green-400/20 text-green-400',    slate: 'bg-slate-600/30 text-slate-300',    indigo: 'bg-indigo-600/30 text-indigo-400',  };  return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors[color] || colors.slate}`}>{label}</span>;}export function StatusBadge({ status }) {  const map = {    'Pending': 'yellow',    'In Progress': 'blue',    'Completed': 'green',  };  return <Badge label={status} color={map[status] || 'slate'} />;}
+export function Badge({ label, color = 'slate' }) {
+  const colors = {
+    yellow: 'bg-yellow-400/20 text-yellow-400',
+    blue: 'bg-blue-400/20 text-blue-400',
+    green: 'bg-green-400/20 text-green-400',
+    slate: 'bg-slate-600/30 text-slate-300',
+    indigo: 'bg-indigo-600/30 text-indigo-400',
+  };
+  return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors[color] || colors.slate}`}>{label}</span>;
+}
+
+export function StatusBadge({ status }) {
+  const map = {
+    'Pending': 'yellow',
+    'In Progress': 'blue',
+    'Completed': 'green',
+  };
+  return <Badge label={status} color={map[status] || 'slate'} />;
+}

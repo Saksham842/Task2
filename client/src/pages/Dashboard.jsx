@@ -1,1 +1,78 @@
-import { useState, useEffect } from 'react';import { useNavigate } from 'react-router-dom';import API from '../api/axios';import { useAuth } from '../context/AuthContext';import { ClipboardDocumentListIcon, ClockIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';export default function Dashboard() {  const { isAdmin } = useAuth();  const navigate = useNavigate();  const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, completed: 0 });  const [loading, setLoading] = useState(true);  useEffect(() => {    API.get('/tasks')      .then((res) => {        const tasks = res.data;        setStats({          total: tasks.length,          pending: tasks.filter((t) => t.status === 'Pending').length,          inProgress: tasks.filter((t) => t.status === 'In Progress').length,          completed: tasks.filter((t) => t.status === 'Completed').length,        });      })      .finally(() => setLoading(false));  }, []);  const cards = [    { label: 'Total Tasks', count: stats.total, icon: ClipboardDocumentListIcon, color: 'border-l-indigo-500', iconBg: 'bg-indigo-500/20 text-indigo-400' },    { label: 'Pending', count: stats.pending, icon: ExclamationCircleIcon, color: 'border-l-yellow-500', iconBg: 'bg-yellow-500/20 text-yellow-400' },    { label: 'In Progress', count: stats.inProgress, icon: ClockIcon, color: 'border-l-blue-500', iconBg: 'bg-blue-500/20 text-blue-400' },    { label: 'Completed', count: stats.completed, icon: CheckCircleIcon, color: 'border-l-green-500', iconBg: 'bg-green-500/20 text-green-400' },  ];  return (    <div>      <h2 className="text-2xl font-bold text-white mb-6">Dashboard</h2>      {loading ? (        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">          {[1, 2, 3, 4].map((i) => (            <div key={i} className="bg-slate-800 rounded-xl p-5 animate-pulse h-24" />          ))}        </div>      ) : (        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">          {cards.map((card) => (            <div key={card.label} className={`bg-slate-800 rounded-xl p-5 ring-1 ring-white/10 border-l-4 ${card.color}`}>              <div className="flex items-center justify-between">                <div>                  <p className="text-3xl font-bold text-white">{card.count}</p>                  <p className="text-sm text-slate-400 mt-1">{card.label}</p>                </div>                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${card.iconBg}`}>                  <card.icon className="w-5 h-5" />                </div>              </div>            </div>          ))}        </div>      )}      <div className="bg-slate-800 rounded-xl ring-1 ring-white/10 p-6">        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>        <div className="flex flex-wrap gap-3">          {isAdmin && (            <button onClick={() => navigate('/tasks')}              className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm transition">              Create New Task            </button>          )}          <button onClick={() => navigate('/tasks')}            className="bg-white/5 hover:bg-white/10 text-slate-200 px-4 py-2 rounded-lg text-sm transition ring-1 ring-white/10">            View All Tasks          </button>        </div>      </div>    </div>  );}
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
+import { ClipboardDocumentListIcon, ClockIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+
+export default function Dashboard() {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, completed: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/tasks')
+      .then((res) => {
+        const tasks = res.data;
+        setStats({
+          total: tasks.length,
+          pending: tasks.filter((t) => t.status === 'Pending').length,
+          inProgress: tasks.filter((t) => t.status === 'In Progress').length,
+          completed: tasks.filter((t) => t.status === 'Completed').length,
+        });
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const cards = [
+    { label: 'Total Tasks', count: stats.total, icon: ClipboardDocumentListIcon, color: 'border-l-indigo-500', iconBg: 'bg-indigo-500/20 text-indigo-400' },
+    { label: 'Pending', count: stats.pending, icon: ExclamationCircleIcon, color: 'border-l-yellow-500', iconBg: 'bg-yellow-500/20 text-yellow-400' },
+    { label: 'In Progress', count: stats.inProgress, icon: ClockIcon, color: 'border-l-blue-500', iconBg: 'bg-blue-500/20 text-blue-400' },
+    { label: 'Completed', count: stats.completed, icon: CheckCircleIcon, color: 'border-l-green-500', iconBg: 'bg-green-500/20 text-green-400' },
+  ];
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-white mb-6">Dashboard</h2>
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-slate-800 rounded-xl p-5 animate-pulse h-24" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {cards.map((card) => (
+            <div key={card.label} className={`bg-slate-800 rounded-xl p-5 ring-1 ring-white/10 border-l-4 ${card.color}`}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-3xl font-bold text-white">{card.count}</p>
+                  <p className="text-sm text-slate-400 mt-1">{card.label}</p>
+                </div>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${card.iconBg}`}>
+                  <card.icon className="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="bg-slate-800 rounded-xl ring-1 ring-white/10 p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+        <div className="flex flex-wrap gap-3">
+          {isAdmin && (
+            <button onClick={() => navigate('/tasks')}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm transition">
+              Create New Task
+            </button>
+          )}
+          <button onClick={() => navigate('/tasks')}
+            className="bg-white/5 hover:bg-white/10 text-slate-200 px-4 py-2 rounded-lg text-sm transition ring-1 ring-white/10">
+            View All Tasks
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
