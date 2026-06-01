@@ -110,7 +110,7 @@ export default function Dashboard() {
 
       <div className="bg-white p-6 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-3">Tasks</h3>
-        <TaskList tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} userRole={user?.role} />
+        <TaskList tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} userRole={user?.role} onTaskUpdated={loadTasks} />
       </div>
     </div>
   );
