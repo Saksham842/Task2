@@ -27,6 +27,21 @@ Run:
 npm run dev
 ```
 
+### Seed Default Admin
+
+Creates a default admin account for testing:
+
+```bash
+cd server
+node seed.js
+```
+
+```
+Default admin created:
+  Email: admin@example.com
+  Password: admin123
+```
+
 ---
 
 ## API Documentation
