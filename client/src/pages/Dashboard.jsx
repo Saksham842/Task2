@@ -1,116 +1,77 @@
 import { useState, useEffect } from 'react';
-import { getTasks, createTask, updateTask, deleteTask, getUsers } from '../api';
+import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
-import TaskForm from '../components/TaskForm';
-import TaskList from '../components/TaskList';
+import { ClipboardDocumentListIcon, ClockIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
-  const { user } = useAuth();
-  const [tasks, setTasks] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const loadTasks = async () => {
-    try {
-      const data = await getTasks();
-      setTasks(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const loadUsers = async () => {
-    try {
-      const data = await getUsers();
-      setUsers(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, completed: 0 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadTasks();
-    loadUsers();
+    api.get('/tasks')
+      .then((res) => {
+        const tasks = res.data;
+        setStats({
+          total: tasks.length,
+          pending: tasks.filter((t) => t.status === 'Pending').length,
+          inProgress: tasks.filter((t) => t.status === 'In Progress').length,
+          completed: tasks.filter((t) => t.status === 'Completed').length,
+        });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  const clearMessages = () => {
-    setError('');
-    setSuccess('');
-  };
-
-  const handleCreate = async (taskData) => {
-    clearMessages();
-    try {
-      await createTask(taskData);
-      setSuccess('Task created successfully');
-      setShowForm(false);
-      loadTasks();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleUpdate = async (taskData) => {
-    clearMessages();
-    try {
-      await updateTask(editingTask._id || editingTask.id, taskData);
-      setSuccess('Task updated successfully');
-      setEditingTask(null);
-      loadTasks();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    clearMessages();
-    if (!window.confirm('Delete this task?')) return;
-    try {
-      await deleteTask(id);
-      setSuccess('Task deleted successfully');
-      loadTasks();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleEdit = (task) => {
-    setEditingTask(task);
-    setShowForm(true);
-  };
+  const cards = [
+    { label: 'Total Tasks', count: stats.total, icon: ClipboardDocumentListIcon, color: 'border-l-indigo-500', iconBg: 'bg-indigo-500/20 text-indigo-400' },
+    { label: 'Pending', count: stats.pending, icon: ExclamationCircleIcon, color: 'border-l-yellow-500', iconBg: 'bg-yellow-500/20 text-yellow-400' },
+    { label: 'In Progress', count: stats.inProgress, icon: ClockIcon, color: 'border-l-blue-500', iconBg: 'bg-blue-500/20 text-blue-400' },
+    { label: 'Completed', count: stats.completed, icon: CheckCircleIcon, color: 'border-l-green-500', iconBg: 'bg-green-500/20 text-green-400' },
+  ];
 
   return (
-    <div className="max-w-4xl mx-auto mt-8 px-4">
-      <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
-
-      {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
-      {success && <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-sm">{success}</div>}
-
-      {user?.role === 'Admin' && (
-        <button onClick={() => { setShowForm(!showForm); setEditingTask(null); }}
-          className="bg-blue-600 text-white px-4 py-2 rounded text-sm mb-4 cursor-pointer hover:bg-blue-700">
-          {showForm ? 'Cancel' : 'Create Task'}
-        </button>
-      )}
-
-      {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-3">{editingTask ? 'Edit Task' : 'New Task'}</h3>
-          <TaskForm
-            onSubmit={editingTask ? handleUpdate : handleCreate}
-            initialData={editingTask}
-            users={users}
-            buttonText={editingTask ? 'Update Task' : 'Create Task'}
-          />
+    <div>
+      <h2 className="text-2xl font-bold text-white mb-6">Dashboard</h2>
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-slate-800 rounded-xl p-5 animate-pulse h-24" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {cards.map((card) => (
+            <div key={card.label} className={`bg-slate-800 rounded-xl p-5 ring-1 ring-white/10 border-l-4 ${card.color}`}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-3xl font-bold text-white">{card.count}</p>
+                  <p className="text-sm text-slate-400 mt-1">{card.label}</p>
+                </div>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${card.iconBg}`}>
+                  <card.icon className="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-3">Tasks</h3>
-        <TaskList tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} userRole={user?.role} onTaskUpdated={loadTasks} />
+      <div className="bg-slate-800 rounded-xl ring-1 ring-white/10 p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+        <div className="flex flex-wrap gap-3">
+          {isAdmin && (
+            <button onClick={() => navigate('/tasks')}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm transition">
+              Create New Task
+            </button>
+          )}
+          <button onClick={() => navigate('/tasks')}
+            className="bg-white/5 hover:bg-white/10 text-slate-200 px-4 py-2 rounded-lg text-sm transition ring-1 ring-white/10">
+            View All Tasks
+          </button>
+        </div>
       </div>
     </div>
   );

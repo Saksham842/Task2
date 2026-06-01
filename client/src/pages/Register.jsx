@@ -1,35 +1,28 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../api';
+import api from '../api/axios';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
+import Spinner from '../components/Spinner';
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
-
-    if (!name || !email || !password) {
-      setError('All fields are required');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
+    if (!name || !email || !password) { setError('All fields are required'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
     setLoading(true);
     try {
-      await register({ name, email, password });
-      setSuccess('Registered successfully! Redirecting...');
-      setTimeout(() => navigate('/login'), 1500);
+      await api.post('/auth/register', { name, email, password });
+      navigate('/login');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -38,34 +31,45 @@ export default function Register() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
-      {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
-      {success && <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-sm">{success}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Name</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-4">
+      <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center mb-3">
+            <ClipboardDocumentListIcon className="w-7 h-7 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-white">TaskFlow</h1>
+          <p className="text-sm text-slate-400 mt-1">Create an account</p>
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Password</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm" />
-        </div>
-        <button type="submit" disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded text-sm w-full disabled:opacity-50 cursor-pointer">
-          {loading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
-      <p className="mt-4 text-sm text-center">
-        Already have an account? <Link to="/login" className="text-blue-600 underline">Login</Link>
-      </p>
+        {error && <p className="text-red-400 text-sm mb-4 text-center">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-slate-300 mb-1">Name</label>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none transition" placeholder="John Doe" />
+          </div>
+          <div>
+            <label className="block text-sm text-slate-300 mb-1">Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none transition" placeholder="you@example.com" />
+          </div>
+          <div className="relative">
+            <label className="block text-sm text-slate-300 mb-1">Password</label>
+            <input type={showPw ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none transition pr-10" placeholder="••••••••" />
+            <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-[34px] text-slate-400 hover:text-white">
+              {showPw ? <EyeSlashIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+            </button>
+          </div>
+          <button type="submit" disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg py-2.5 text-sm font-medium flex items-center justify-center gap-2 transition disabled:opacity-60">
+            {loading && <Spinner size="w-4 h-4" />}
+            {loading ? 'Creating account...' : 'Create Account'}
+          </button>
+        </form>
+        <p className="mt-4 text-sm text-center text-slate-400">
+          Already have an account? <Link to="/login" className="text-indigo-400 hover:text-indigo-300">Sign In</Link>
+        </p>
+      </div>
     </div>
   );
 }

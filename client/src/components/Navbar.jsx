@@ -1,27 +1,14 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Bars3Icon as MenuIcon } from '@heroicons/react/24/outline';
 
-export default function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
+export default function Navbar({ title, onMenuClick }) {
   return (
-    <nav className="bg-blue-600 text-white px-6 py-3 flex justify-between items-center">
-      <Link to="/dashboard" className="font-bold text-lg">Task Manager</Link>
-      {user && (
-        <div className="flex items-center gap-4">
-          <span className="text-sm opacity-80">{user.name} ({user.role})</span>
-          <button onClick={handleLogout}
-            className="border border-white text-white px-3 py-1 rounded text-xs cursor-pointer hover:bg-blue-700">
-            Logout
-          </button>
-        </div>
-      )}
-    </nav>
+    <header className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur border-b border-white/10 px-4 lg:px-6 py-3 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <button onClick={onMenuClick} className="lg:hidden text-slate-400 hover:text-white">
+          <MenuIcon className="w-6 h-6" />
+        </button>
+        <h1 className="text-lg font-semibold text-white">{title}</h1>
+      </div>
+    </header>
   );
 }

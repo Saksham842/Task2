@@ -1,0 +1,8 @@
+export default function Avatar({ name, size = 'w-8 h-8', textSize = 'text-xs' }) {
+  const initials = name?.split(' ').map((n) => n[0]).join('').toUpperCase() || '?';
+  return (
+    <div className={`${size} rounded-full bg-indigo-600 flex items-center justify-center ${textSize} font-semibold`}>
+      {initials}
+    </div>
+  );
+}
