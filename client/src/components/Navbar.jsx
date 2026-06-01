@@ -1,14 +1,1 @@
-import { Bars3Icon as MenuIcon } from '@heroicons/react/24/outline';
-
-export default function Navbar({ title, onMenuClick }) {
-  return (
-    <header className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur border-b border-white/10 px-4 lg:px-6 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <button onClick={onMenuClick} className="lg:hidden text-slate-400 hover:text-white">
-          <MenuIcon className="w-6 h-6" />
-        </button>
-        <h1 className="text-lg font-semibold text-white">{title}</h1>
-      </div>
-    </header>
-  );
-}
+import { Bars3Icon as MenuIcon } from '@heroicons/react/24/outline';export default function Navbar({ title, onMenuClick }) {  return (    <header className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur border-b border-white/10 px-4 lg:px-6 py-3 flex items-center justify-between">      <div className="flex items-center gap-3">        <button onClick={onMenuClick} className="lg:hidden text-slate-400 hover:text-white">          <MenuIcon className="w-6 h-6" />        </button>        <h1 className="text-lg font-semibold text-white">{title}</h1>      </div>    </header>  );}
