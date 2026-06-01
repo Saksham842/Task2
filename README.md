@@ -62,7 +62,7 @@ POST /auth/register
 Content-Type: application/json
 
 {
-  "name": "John Doe",
+  "name": "Test User",
   "email": "john@example.com",
   "password": "password123"
 }
@@ -106,7 +106,7 @@ Content-Type: application/json
   "token": "eyJhbGciOiJIUzI1NiIs...",
   "user": {
     "id": "665a1b2c3d4e5f6a7b8c9d0e",
-    "name": "John Doe",
+    "name": "Test User",
     "email": "john@example.com",
     "role": "User"
   }
@@ -136,7 +136,7 @@ Authorization: Bearer <token>
 ```json
 {
   "id": "665a1b2c3d4e5f6a7b8c9d0e",
-  "name": "John Doe",
+  "name": "Test User",
   "email": "john@example.com",
   "role": "User",
   "createdAt": "2025-01-01T00:00:00.000Z",
@@ -168,13 +168,13 @@ Authorization: Bearer <token>
 [
   {
     "_id": "665a1b2c3d4e5f6a7b8c9d0e",
-    "name": "John Doe",
+    "name": "Test User",
     "email": "john@example.com",
     "role": "User"
   },
   {
     "_id": "665a1b2c3d4e5f6a7b8c9d1f",
-    "name": "Admin User",
+    "name": "Admin",
     "email": "admin@example.com",
     "role": "Admin"
   }
@@ -207,13 +207,13 @@ Authorization: Bearer <token>
     "status": "Pending",
     "assignedTo": {
       "_id": "665a1b2c3d4e5f6a7b8c9d0e",
-      "name": "John Doe",
+      "name": "Test User",
       "email": "john@example.com",
       "role": "User"
     },
     "assignedBy": {
       "_id": "665a1b2c3d4e5f6a7b8c9d1f",
-      "name": "Admin User",
+      "name": "Admin",
       "email": "admin@example.com",
       "role": "Admin"
     },
