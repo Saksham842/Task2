@@ -42,21 +42,21 @@ export default function TaskForm({ initial, users, onSubmit, onCancel }) {
       <div>
         <label className="block text-sm text-slate-300 mb-1">Title <span className="text-red-400">*</span></label>
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
-          className={`w-full bg-white/5 border ${errors.title ? 'border-red-500' : 'border-white/10'} rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none`} placeholder="Task title" />
+          className={`w-full bg-slate-700 border ${errors.title ? 'border-red-500' : 'border-white/10'} rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none`} placeholder="Task title" />
         {errors.title && <p className="text-red-400 text-xs mt-1">{errors.title}</p>}
       </div>
       <div>
         <label className="block text-sm text-slate-300 mb-1">Description</label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Optional description" />
+          className="w-full bg-slate-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Optional description" />
       </div>
       <div>
         <label className="block text-sm text-slate-300 mb-1">Assign To <span className="text-red-400">*</span></label>
         <select value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)}
-          className={`w-full bg-white/5 border ${errors.assignedTo ? 'border-red-500' : 'border-white/10'} rounded-lg px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none`}>
-          <option value="">Select a user</option>
+          className={`w-full bg-slate-700 border ${errors.assignedTo ? 'border-red-500' : 'border-white/10'} rounded-lg px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none`}>
+          <option value="" className="bg-slate-700 text-slate-200">Select a user</option>
           {users.map((u) => (
-            <option key={u._id || u.id} value={u._id || u.id}>{u.name} ({u.email})</option>
+            <option key={u._id || u.id} value={u._id || u.id} className="bg-slate-700 text-slate-200">{u.name} ({u.email})</option>
           ))}
         </select>
         {errors.assignedTo && <p className="text-red-400 text-xs mt-1">{errors.assignedTo}</p>}
@@ -64,10 +64,10 @@ export default function TaskForm({ initial, users, onSubmit, onCancel }) {
       <div>
         <label className="block text-sm text-slate-300 mb-1">Status</label>
         <select value={status} onChange={(e) => setStatus(e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none">
-          <option>Pending</option>
-          <option>In Progress</option>
-          <option>Completed</option>
+          className="w-full bg-slate-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none">
+          <option className="bg-slate-700 text-slate-200">Pending</option>
+          <option className="bg-slate-700 text-slate-200">In Progress</option>
+          <option className="bg-slate-700 text-slate-200">Completed</option>
         </select>
       </div>
       <div className="flex gap-3 pt-2">

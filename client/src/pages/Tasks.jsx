@@ -61,11 +61,11 @@ export default function Tasks() {
             className="w-full bg-slate-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none" />
         </div>
         <select value={filter} onChange={(e) => setFilter(e.target.value)}
-          className="bg-slate-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none">
-          <option value="">All Status</option>
-          <option>Pending</option>
-          <option>In Progress</option>
-          <option>Completed</option>
+          className="bg-slate-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none">
+          <option value="" className="bg-slate-700 text-slate-200">All Status</option>
+          <option className="bg-slate-700 text-slate-200">Pending</option>
+          <option className="bg-slate-700 text-slate-200">In Progress</option>
+          <option className="bg-slate-700 text-slate-200">Completed</option>
         </select>
       </div>
 

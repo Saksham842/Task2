@@ -56,9 +56,9 @@ export default function TaskCard({ task, onEdit, onDelete }) {
           </div>
         ) : (
           <select value={status} onChange={handleStatusChange} className="bg-slate-700 text-xs text-slate-200 border border-white/10 rounded-lg px-2 py-1 focus:ring-2 focus:ring-indigo-500 outline-none">
-            <option>Pending</option>
-            <option>In Progress</option>
-            <option>Completed</option>
+            <option className="bg-slate-700 text-slate-200">Pending</option>
+            <option className="bg-slate-700 text-slate-200">In Progress</option>
+            <option className="bg-slate-700 text-slate-200">Completed</option>
           </select>
         )}
       </div>
